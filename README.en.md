@@ -10,28 +10,28 @@
 
 Author: [海鮮稽查長 SeaFoodInspector](https://github.com/SeaFoodInspector056)
 
-## TL;DR for AI agents
+## TL;DR: what problem does this skill solve?
 
-**Let the agent actually see handwritten PDF pages instead of receiving only extracted text.** Some Drive/PDF tools default to text, losing handwriting, equation layout, arrows, colors, and diagrams. This project combines [Agent Skills](https://agentskills.io/home) instructions with a local MCP renderer that supplies page images to the current agent's vision model.
+**Who this is especially useful for**:
 
-Sources can include Google Drive, NAS, and local files. Mount NAS storage as a readable local file path first. Like handing the agent a screenshot, the tool automatically supplies the requested page image so the vision model can analyze handwriting, formulas, and diagrams with more complete evidence.
+People who find it inconvenient to take and upload screenshots of handwritten notes every time they want AI analysis, and want an agent to read their handwritten digital notes in PDF format **without taking screenshots**.
+
+---
+
+**Just like handing the agent a screenshot, let it actually see handwritten PDF pages instead of receiving only extracted text**:
+
+Some Drive/PDF tools return only text by default, potentially losing handwriting, equation layout, arrows, colors, and images. This project combines [Agent Skills](https://agentskills.io/home) instructions with a local MCP renderer that supplies the complete requested page to the current agent's vision model. The model can then analyze handwritten notes, formulas, and diagrams to **improve analysis accuracy**.
+
+---
+
+**Supports PDFs from Google Drive, NAS, and local storage** (NAS must first be mounted as a readable local file path).
 
 ```text
-Authorized original-PDF download URL from Drive / local PDF
+Authorized original-PDF download URL / local PDF
     → MCP reads and renders the requested page in memory
     → returns actual MCP image content
     → agent inspects the image and explains the notes
 ```
-
-**Version 2.0 does not create temporary PDF/PNG copies by default.** Images are still PNG-encoded, but returned as memory data instead of being saved, opened, and deleted. If the connector only provides a local download, the server reads that file; connector-owned copies remain the connector's responsibility.
-
-This is not a universal limitation of agents or PDFs, and PNG is not inherently more accurate than PDF. Hosts with complete PDF visual input can use that route. This project provides an explicit MCP route with page and resolution control. It makes no separate model API calls and needs no API key; the conversation host's normal usage rules still apply.
-
-## Scope and handwriting recognition
-
-Works with PDFs exported from Goodnotes or other note-taking applications, including handwriting, formulas, diagrams, and annotations. Goodnotes exports have been used in testing; other applications have not been individually tested. Native notebook formats such as `.goodnotes` are outside scope.
-
-Compared with extracted text alone, full page images provide more complete evidence, **aiming to improve handwritten-note recognition and understanding**.
 
 ## Install both the skill and MCP
 
@@ -80,12 +80,6 @@ Default resolution is 200 DPI, configurable from 36–300 DPI. For small handwri
 
 Per-call limits: 100 MiB PDF, 20 million pixels, and 8 MiB base64 image data. Exceeding a limit produces an error: reduce DPI or use a crop. Pages are not silently omitted. Large PDFs may need splitting elsewhere. Remote PDFs are fetched anew each call to avoid cross-request document caching; a local original can reduce downloads when reading many pages.
 
-## Storage and migration from 1.x
-
-The v2 MCP writes no PDF/PNG copies, leaves originals untouched, and retains no cross-request document cache. Installed code, dependencies, conversation images, tool-argument logs, connector/app caches, and OS paging are outside this guarantee. Total disk use is not zero. The server does not log download URLs or passwords, but the host may retain tool arguments.
-
-When upgrading from 1.x, preserve private `references/sources.md` and the local runtime, install the added dependency, and register MCP. The legacy `pdf_to_png.py` remains available for **explicit persistent image exports**. `download_pdf.py` and `temp_workspace.py` remain for legacy compatibility and cleanup of known old sessions. They are no longer the default analysis route.
-
 ## Verification
 
 From the skill directory:
@@ -94,11 +88,7 @@ From the skill directory:
 .\.venv\Scripts\python.exe -B -m unittest discover -s tests -v
 ```
 
-Tests include real stdio MCP initialization, tool discovery, image and error responses, page bounds, cropping, encrypted PDFs, download limits, no image files written, and original-file preservation. A Goodnotes networking notebook's page 10 also completed Drive → memory → MCP image result → display and actual visual inspection. That run forwarded the image through a test MCP client; native host discovery/calling after reloading is a separate integration check. Other clients have not been individually tested.
-
-## Why Python?
-
-Python handles MCP, downloads, and parameters. PyMuPDF delegates rendering to the native MuPDF engine. Resolution, PDF complexity, image encoding, and transfer remain the major costs; switching to C++ does not automatically improve performance. This revision removes default PDF/PNG disk writes; rendering and visual processing still occur.
+Tests include real stdio MCP initialization, tool discovery, image and error responses, page bounds, cropping, encrypted PDFs, download limits, no image files written, and original-file preservation. Page 10 of a notebook also completed Drive → memory → MCP image result → display and actual visual inspection. That run forwarded the image through a test MCP client; native host discovery/calling after reloading is a separate integration check. Other clients have not been individually tested.
 
 ## License
 
