@@ -1,0 +1,6 @@
+interface:
+  display_name: "Goodnotes 筆記看圖分析 · SeaFoodInspector"
+  short_description: "從 Google Drive 取得 Goodnotes PDF，轉成頁面圖片並分析"
+  default_prompt: "使用 $goodnotes-pdf-vision 從 Google Drive 取得最新版筆記，將指定頁面轉成 PNG，實際看圖後解釋。"
+policy:
+  allow_implicit_invocation: true
