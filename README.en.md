@@ -1,135 +1,105 @@
-# Handwritten PDF Vision — AI Agent Skill
+# Handwritten PDF Vision — AI Agent Skill + MCP
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
-[![Version: 1.2.1](https://img.shields.io/badge/Version-1.2.1-2563EB?style=flat-square)](SKILL.md)
+[![Version: 2.0.0](https://img.shields.io/badge/Version-2.0.0-2563EB?style=flat-square)](SKILL.md)
 [![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![PyMuPDF: 1.28.2](https://img.shields.io/badge/PyMuPDF-1.28.2-16A34A?style=flat-square)](requirements.txt)
+[![MCP: 1.30.0](https://img.shields.io/badge/MCP_SDK-1.30.0-555555?style=flat-square)](requirements.txt)
 
 [繁體中文](README.md) | **English**
 
 Author: [海鮮稽查長 SeaFoodInspector](https://github.com/SeaFoodInspector056)
 
-Version: 1.2.1
+## TL;DR for AI agents
 
-An **AI agent skill** using the open [Agent Skills format](https://agentskills.io/home). It retrieves a PDF from Google Drive or a local file, renders selected pages to PNG, and asks a vision-capable agent to actually inspect those images before explaining handwritten notes, formulas, and diagrams. It uses PyMuPDF page rendering rather than replacing the page image with OCR or extracted PDF text.
+**Let the agent actually see handwritten PDF pages instead of receiving only extracted text.** Some Drive/PDF tools default to text, losing handwriting, equation layout, arrows, colors, and diagrams. This project combines [Agent Skills](https://agentskills.io/home) instructions with a local MCP renderer that supplies page images to the current agent's vision model.
 
-## TL;DR for AI agents: what problem does this skill solve?
+Sources can include Google Drive, NAS, and local files. Mount NAS storage as a readable local file path first. Like handing the agent a screenshot, the tool automatically supplies the requested page image so the vision model can analyze handwriting, formulas, and diagrams with more complete evidence.
 
-**It addresses an input-routing problem: an agent may receive PDF text without actually seeing the notebook page.** In this project's Google Drive connector test, the default read returned text. That can support summaries, but it does not establish that the agent saw handwriting, illustrations, arrows, or layout; handwritten content can also contain recognition errors.
-
-- **Text-reading route**: Drive PDF → connector-provided text → an answer based on that text.
-- **This skill's explicit visual route**: retrieve the original PDF → render selected pages to PNG → actually inspect the images → clean per-request scratch copies.
-- **Use it when**: the available retrieval tool supplies only text, or you need explicit control over page selection, resolution, and scratch cleanup.
-
-This is not a universal rule about agents or PDFs, and PNG is not inherently more accurate than PDF. If a host already supplies PDF page images to a vision model, that route can be used without manually creating PNGs. For example, the OpenAI Responses API includes text and page images for PDF `input_file` inputs on vision-capable models. Connector-returned text or a PDF downloaded to local disk is not automatically that visual input. See the [official file-input guide](https://developers.openai.com/api/docs/guides/file-inputs).
-
-This project currently implements the inspectable PNG route. It does not automatically call a native PDF API, and no native-PDF-versus-PNG accuracy comparison has been completed.
-
-## Visual analysis of handwritten PDF notes
-
-Use this workflow with note-taking applications that export PDF. It analyzes the exported page images, including handwriting, equations, and layout. Goodnotes is the source tested so far; PDFs exported by other applications can follow the same workflow, but those applications have not been individually tested. Native notebook formats are outside the current scope.
-
-
-## Better input for handwritten-note recognition
-
-**This skill aims to improve an agent's accuracy when reading and understanding handwritten notes.** Compared with providing only extracted PDF text, page images preserve handwriting, superscripts and subscripts, equation layout, arrows, colors, and spatial context. This gives a vision model more complete evidence to interpret the page and is useful for handwritten PDFs without a usable text layer.
-
-Actual results depend on source legibility, rendering resolution, and the model's capabilities. This project has not conducted a quantitative handwriting-recognition accuracy comparison. Rendering cannot guarantee correct recognition of every mark or recover detail that was already blurred in the source.
-
-## Why Python?
-
-Python handles downloading, page selection, file management, and cleanup. PyMuPDF delegates the actual rendering to the native MuPDF engine, so pixel rendering is not implemented as Python loops. This provides native rendering capabilities without adding a separate C++ build toolchain. See the [PyMuPDF tutorial](https://pymupdf.readthedocs.io/en/latest/tutorial.html).
-
-Resolution, page dimensions, PDF complexity, PNG encoding, and disk I/O are major performance factors. Doubling DPI roughly quadruples the pixel count. Python is a practical choice for maintaining this small, cross-platform workflow; whether a C++ implementation is faster requires measuring the same engine, files, resolution, and hardware.
-
-## Supported agents and compatibility
-
-This project is an **AI Agent Skill**. It has been tested in a local Codex environment on Windows 11. Other Agent Skills-compatible products can reuse the core instructions and Python scripts if they provide:
-
-- Skill discovery/loading, Python execution, and local file access.
-- A tool that actually supplies page images to a vision-capable model.
-- Authorized original-file retrieval and network access when using Google Drive.
-
-| Environment | Verification status |
-| --- | --- |
-| Codex, including local Codex in the ChatGPT desktop app, on Windows 11 | Downloading, rendering, image viewing, and scratch cleanup verified |
-| Other Agent Skills-compatible agents | Portable format and scripts; tool names, installation paths, and permissions may need adaptation. Not tested |
-
-`agents/openai.yaml` supplies Codex-specific interface and invocation settings. Other products can use their own discovery mechanism with the core `SKILL.md` and scripts. Automatic skill selection depends on the host product. See the [Agent Skills overview](https://agentskills.io/home).
-
-## Quick installation
-
-### Option 1: install for a supported AI agent
-
-With Node.js and `npx` available, run:
-
-```bash
-npx skills add SeaFoodInspector056/handwritten-pdf-vision --skill handwritten-pdf-vision
+```text
+Authorized original-PDF download URL from Drive / local PDF
+    → MCP reads and renders the requested page in memory
+    → returns actual MCP image content
+    → agent inspects the image and explains the notes
 ```
 
-Follow the CLI prompts to choose the target agent and installation scope. This installs the skill instructions and scripts; it does not sign you into Google Drive or bundle Python packages. On first use, the agent can prepare the Python runtime by following `SKILL.md`.
+**Version 2.0 does not create temporary PDF/PNG copies by default.** Images are still PNG-encoded, but returned as memory data instead of being saved, opened, and deleted. If the connector only provides a local download, the server reads that file; connector-owned copies remain the connector's responsibility.
 
-To list discoverable skills without installing:
+This is not a universal limitation of agents or PDFs, and PNG is not inherently more accurate than PDF. Hosts with complete PDF visual input can use that route. This project provides an explicit MCP route with page and resolution control. It makes no separate model API calls and needs no API key; the conversation host's normal usage rules still apply.
 
-```bash
-npx skills add SeaFoodInspector056/handwritten-pdf-vision --list
-```
+## Scope and handwriting recognition
 
-This repository passed the Skills CLI `--list` discovery check and exposes `handwritten-pdf-vision`. That does not establish compatibility with every agent or confirm a skills.sh directory listing or audit. See the [Skills CLI documentation](https://skills.sh/docs/cli).
+Works with PDFs exported from Goodnotes or other note-taking applications, including handwriting, formulas, diagrams, and annotations. Goodnotes exports have been used in testing; other applications have not been individually tested. Native notebook formats such as `.goodnotes` are outside scope.
 
-### Option 2: ask Codex to install it
+Compared with extracted text alone, full page images provide more complete evidence, **aiming to improve handwritten-note recognition and understanding**.
 
-Give a Codex agent with skill-installer this request:
+## Install both the skill and MCP
 
-> Use skill-installer to install https://github.com/SeaFoodInspector056/handwritten-pdf-vision . The skill is at the repository root; install it as handwritten-pdf-vision, preserve any existing private source settings, and prepare the Python runtime.
+Requires Python 3.10+, an agent that can run local stdio MCP servers, and a client that forwards MCP image content to a vision-capable model. Drive sources also need an authorized Drive connector. No Drive credentials are bundled.
 
-### Option 3: manual installation and Python setup
+1. Install the skill. With Node.js/npx available:
 
+   ```bash
+   npx skills add SeaFoodInspector056/handwritten-pdf-vision --skill handwritten-pdf-vision
+   ```
 
-Install this directory as a discoverable skill named `handwritten-pdf-vision`. With Codex's skill-installer, provide this repository's GitHub URL. Avoid installing duplicate copies under multiple skill locations.
+   Alternatively, ask Codex's skill-installer to install this repository's root skill and preserve existing private source settings.
 
-From the skill directory, create the runtime once in Windows PowerShell:
+2. Open Windows PowerShell or the VS Code terminal **in the installed skill directory** and set up the runtime once:
 
-```powershell
-py -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
-```
+   ```powershell
+   py -m venv .venv
+   .\.venv\Scripts\python.exe -m pip install -r requirements.txt
+   .\.venv\Scripts\python.exe scripts/setup_mcp.py --register-codex
+   ```
 
-Requirements: Python 3.10+, an image-viewing tool, and appropriate local permissions. Google Drive use additionally requires a Drive connector and network access for downloads. On macOS/Linux, use `python3 -m venv .venv` and `.venv/bin/python`. The virtual environment is not bundled with the repository.
+   Codex CLI must be available in the terminal. The helper adds only this project's MCP registration and refuses to replace an existing same-name registration pointing elsewhere. Do not recreate an existing venv unnecessarily.
+
+3. Reload MCP connections or restart the application and confirm `pdf_info` and `render_pdf_page` are available. **Installing SKILL.md alone does not connect MCP.**
+
+On macOS/Linux, use `python3 -m venv .venv` and `.venv/bin/python`. For other clients, run `python scripts/setup_mcp.py` to print stdio JSON containing the actual absolute paths, then add it through that client's configuration. Recreate the runtime and registration on each computer; do not copy venvs or another computer's absolute paths.
+
+See [official Codex MCP configuration](https://learn.chatgpt.com/docs/extend/mcp). Skills CLI installs the skill, not Drive authentication or MCP registration, and does not prove compatibility with every agent.
 
 ## Usage
 
-Mention `$handwritten-pdf-vision` in a Codex conversation, then specify the PDF, physical page number, and question. For example: find my algorithm notes in the Drive folder I provide and explain physical PDF page 7. Use the invocation mechanism supported by your host if it differs from Codex.
+Ask your agent:
 
-Implicit invocation is enabled for Codex: an agent can load the skill when it is discoverable and the request matches its description. Automatic selection is not guaranteed; explicitly mentioning the skill makes the intent clear. An agent that loads and executes the skill knows it is using it, and the instructions require it to announce this before starting.
+> Use $handwritten-pdf-vision to find my computer networking notes in Drive and analyze physical PDF page 10.
 
-## Temporary files and disk usage
+Implicit invocation remains enabled, but selection depends on the agent. Explicit invocation makes the intent clear. The agent should announce skill use and actually inspect the image before answering.
 
-Default workflow: create a per-request scratch directory → download a PDF copy → render selected pages → inspect the images → remove the temporary PDF/PNG copies → answer.
+| MCP tool | Purpose |
+| --- | --- |
+| `pdf_info` | Page count and geometry, without extracting notebook text |
+| `render_pdf_page` | One page as metadata plus an actual `image/png` MCP content block |
 
-`temp_workspace.py` creates and removes marked scratch sessions. Cleanup checks the directory name, marker, and resolved paths, refuses links/junctions, and preserves the user's original PDF. Its marker is retained when payload removal fails so cleanup can be retried.
+Supply exactly one of `file_path` or `pdf_url`. The URL must be the connector's authorized HTTPS **original-file download URL**, not a Drive `/view` sharing link. Refresh expired URLs and never publish signed URLs. Page numbers start at 1 in physical PDF order, independent of handwritten labels.
 
-```text
-python scripts/temp_workspace.py create --work-root <task-work-directory>
-python scripts/temp_workspace.py cleanup --session <exact-session-path-returned-by-create>
-```
+Default resolution is 200 DPI, configurable from 36–300 DPI. For small handwriting, increase DPI or use `clip=[x0,y0,x1,y1]` in `page.rect` coordinates, measured in PDF points (72 per inch). Each call returns one page; request multiple pages in separate calls.
 
-Running `pdf_to_png.py` by itself is a regular export operation and preserves its output. Cleanup belongs to the complete agent workflow and must happen after the agent has viewed the images.
+Per-call limits: 100 MiB PDF, 20 million pixels, and 8 MiB base64 image data. Exceeding a limit produces an error: reduce DPI or use a crop. Pages are not silently omitted. Large PDFs may need splitting elsewhere. Remote PDFs are fetched anew each call to avoid cross-request document caching; a local original can reduce downloads when reading many pages.
 
-Normal completion removes scratch files; failures and recoverable cancellation must also attempt cleanup. Forced termination, power loss, or changed permissions can leave files behind. There is no background cleanup service or secure-erasure guarantee. Installed code, Python dependencies, app/OS caches, and images retained by the conversation service are outside scratch cleanup. Total disk use is not guaranteed to be zero. PNG exports explicitly requested by the user are preserved.
+## Storage and migration from 1.x
 
-## Tests
+The v2 MCP writes no PDF/PNG copies, leaves originals untouched, and retains no cross-request document cache. Installed code, dependencies, conversation images, tool-argument logs, connector/app caches, and OS paging are outside this guarantee. Total disk use is not zero. The server does not log download URLs or passwords, but the host may retain tool arguments.
+
+When upgrading from 1.x, preserve private `references/sources.md` and the local runtime, install the added dependency, and register MCP. The legacy `pdf_to_png.py` remains available for **explicit persistent image exports**. `download_pdf.py` and `temp_workspace.py` remain for legacy compatibility and cleanup of known old sessions. They are no longer the default analysis route.
+
+## Verification
+
+From the skill directory:
 
 ```powershell
-.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+.\.venv\Scripts\python.exe -B -m unittest discover -s tests -v
 ```
 
-Cleanup tests cover preservation of originals and other sessions, repeated cleanup, invalid target directories, mismatched markers, retry after failure, and link rejection. The link case is skipped if the OS does not permit creating a test link. Rendering, image inspection, and scratch deletion have also been verified with a real PDF page on Windows.
+Tests include real stdio MCP initialization, tool discovery, image and error responses, page bounds, cropping, encrypted PDFs, download limits, no image files written, and original-file preservation. A Goodnotes networking notebook's page 10 also completed Drive → memory → MCP image result → display and actual visual inspection. That run forwarded the image through a test MCP client; native host discovery/calling after reloading is a separate integration check. Other clients have not been individually tested.
 
-The public repository contains no private Drive folder IDs, notebooks, account credentials, or temporary download URLs.
+## Why Python?
+
+Python handles MCP, downloads, and parameters. PyMuPDF delegates rendering to the native MuPDF engine. Resolution, PDF complexity, image encoding, and transfer remain the major costs; switching to C++ does not automatically improve performance. This revision removes default PDF/PNG disk writes; rendering and visual processing still occur.
 
 ## License
 
-The original skill instructions, scripts, and documentation are licensed under the [MIT License](LICENSE), with attribution to 海鮮稽查長 SeaFoodInspector. Use, modification, distribution, and commercial use are permitted subject to preserving the copyright and license notice.
-
-PyMuPDF/MuPDF retain their separate AGPL/commercial licensing. This project's MIT license does not replace dependency terms. Combined distribution or deployment requires a separate evaluation of applicable obligations; see [third-party dependency notices](THIRD_PARTY_NOTICES.md).
+Original code, skill instructions, and documentation use [MIT](LICENSE), attributed to 海鮮稽查長 SeaFoodInspector. The MCP Python SDK is MIT; PyMuPDF/MuPDF retain separate AGPL/commercial licensing, which this project's MIT license does not replace. See [third-party notices](THIRD_PARTY_NOTICES.md). The public repository contains no private notebooks, Drive IDs, credentials, or temporary download URLs.

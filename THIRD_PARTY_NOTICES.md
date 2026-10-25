@@ -7,6 +7,11 @@ The MIT license in `LICENSE` applies to this project's original skill instructio
 | Dependency / 依賴 | Version / 版本 | Upstream license / 上游授權 |
 | --- | --- | --- |
 | PyMuPDF, with its MuPDF engine | PyMuPDF 1.28.2 (see requirements.txt) | GNU Affero General Public License v3.0 (AGPL-3.0), or an Artifex commercial license |
+| MCP Python SDK | 1.30.0, pinned to the maintained v1 API | MIT; see [upstream license](https://github.com/modelcontextprotocol/python-sdk/blob/v1.30.0/LICENSE) |
+
+The MCP SDK installs additional transitive dependencies under their own licenses; installed package metadata and license files are authoritative. No third-party SDK source or binaries are vendored in this repository.
+
+MCP SDK 的間接依賴另依各自授權；請以安裝套件的中繼資料與授權檔為準。本 Repo 未內嵌第三方 SDK 原始碼或二進位檔。
 
 PyMuPDF's installed 1.28.2 package metadata identifies the dual licensing above. See [upstream licensing documentation](https://pymupdf.readthedocs.io/en/latest/about.html#license-and-copyright), the license files distributed with the installed package, and [AGPLv3](https://www.gnu.org/licenses/agpl-3.0.html).
 
