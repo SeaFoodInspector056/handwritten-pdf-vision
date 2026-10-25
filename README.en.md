@@ -13,6 +13,18 @@ Version: 1.2.1
 
 An **AI agent skill** using the open [Agent Skills format](https://agentskills.io/home). It retrieves a PDF from Google Drive or a local file, renders selected pages to PNG, and asks a vision-capable agent to actually inspect those images before explaining handwritten notes, formulas, and diagrams. It uses PyMuPDF page rendering rather than replacing the page image with OCR or extracted PDF text.
 
+## TL;DR for AI agents: what problem does this skill solve?
+
+**It addresses an input-routing problem: an agent may receive PDF text without actually seeing the notebook page.** In this project's Google Drive connector test, the default read returned text. That can support summaries, but it does not establish that the agent saw handwriting, illustrations, arrows, or layout; handwritten content can also contain recognition errors.
+
+- **Text-reading route**: Drive PDF → connector-provided text → an answer based on that text.
+- **This skill's explicit visual route**: retrieve the original PDF → render selected pages to PNG → actually inspect the images → clean per-request scratch copies.
+- **Use it when**: the available retrieval tool supplies only text, or you need explicit control over page selection, resolution, and scratch cleanup.
+
+This is not a universal rule about agents or PDFs, and PNG is not inherently more accurate than PDF. If a host already supplies PDF page images to a vision model, that route can be used without manually creating PNGs. For example, the OpenAI Responses API includes text and page images for PDF `input_file` inputs on vision-capable models. Connector-returned text or a PDF downloaded to local disk is not automatically that visual input. See the [official file-input guide](https://developers.openai.com/api/docs/guides/file-inputs).
+
+This project currently implements the inspectable PNG route. It does not automatically call a native PDF API, and no native-PDF-versus-PNG accuracy comparison has been completed.
+
 ## Visual analysis of handwritten PDF notes
 
 Use this workflow with note-taking applications that export PDF. It analyzes the exported page images, including handwriting, equations, and layout. Goodnotes is the source tested so far; PDFs exported by other applications can follow the same workflow, but those applications have not been individually tested. Native notebook formats are outside the current scope.
