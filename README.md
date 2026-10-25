@@ -12,7 +12,6 @@
 
 適用於能匯出 PDF 的筆記軟體：本技能處理匯出的 PDF 頁面，讓 agent 看圖分析手寫字、公式與版面。Goodnotes 是目前已實測的來源；其他軟體匯出的 PDF 可使用相同流程，但尚未逐一實測。筆記軟體的專用檔案格式不在目前支援範圍內。
 
-Repo、技能識別名稱及呼叫方式現在統一為 `handwritten-pdf-vision`／`$handwritten-pdf-vision`。從舊版升級時，將 `goodnotes-pdf-vision` 替換為新技能，保留私人來源設定，並避免同時載入新舊兩份技能。
 
 ## 改善手寫筆記的辨識
 
