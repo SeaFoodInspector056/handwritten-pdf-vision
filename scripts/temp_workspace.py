@@ -10,8 +10,13 @@ import stat
 import sys
 import uuid
 
-BASE = "goodnotes-pdf-vision-tmp"
-MARKER = ".goodnotes-pdf-vision-session.json"
+BASE = "handwritten-pdf-vision-tmp"
+MARKER = ".handwritten-pdf-vision-session.json"
+# New sessions use the current identity; cleanup also recognizes owned legacy sessions.
+KINDS = {
+    BASE: (MARKER, "handwritten-pdf-vision"),
+    "goodnotes-pdf-vision-tmp": (".goodnotes-pdf-vision-session.json", "goodnotes-pdf-vision"),
+}
 PATTERN = re.compile(r"session-[a-f0-9]{32}")
 
 
@@ -27,7 +32,7 @@ def create(work_root):
         raise ValueError("Scratch base must not be a link or junction.")
     session = base / ("session-" + uuid.uuid4().hex)
     session.mkdir()
-    data = {"skill": "goodnotes-pdf-vision", "session": str(session.resolve()),
+    data = {"skill": "handwritten-pdf-vision", "session": str(session.resolve()),
             "created_utc": datetime.now(timezone.utc).isoformat()}
     (session / MARKER).write_text(json.dumps(data), encoding="utf-8")
     return {"session": str(session), "pdf": str(session / "source.pdf"),
@@ -36,7 +41,7 @@ def create(work_root):
 
 def validate(session):
     path = Path(os.path.abspath(os.path.expanduser(str(session))))
-    if path.parent.name != BASE or not PATTERN.fullmatch(path.name):
+    if path.parent.name not in KINDS or not PATTERN.fullmatch(path.name):
         raise ValueError("Refusing cleanup outside a named skill scratch session.")
     if path.resolve() != path or (path.parent.exists() and linked(path.parent)):
         raise ValueError("Scratch path must not traverse a link or junction.")
@@ -44,11 +49,12 @@ def validate(session):
         return path
     if not path.is_dir() or linked(path):
         raise ValueError("Scratch session must be a normal directory.")
-    marker = path / MARKER
+    marker_name, identity = KINDS[path.parent.name]
+    marker = path / marker_name
     if not marker.is_file() or linked(marker):
         raise ValueError("Missing safe session marker; no files were removed.")
     data = json.loads(marker.read_text(encoding="utf-8"))
-    if data.get("skill") != "goodnotes-pdf-vision" or data.get("session") != str(path):
+    if data.get("skill") != identity or data.get("session") != str(path):
         raise ValueError("Session marker does not match this directory.")
     # Check every entry before recursive removal. Never follow links or junctions.
     for current, dirs, files in os.walk(path, followlinks=False):
@@ -63,15 +69,16 @@ def cleanup(session):
     path = validate(session)
     if not path.exists():
         return {"session": str(path), "removed": True, "already_absent": True}
+    marker_name, _ = KINDS[path.parent.name]
     # Keep the marker until all payloads are gone so failed cleanup can be retried.
     for child in path.iterdir():
-        if child.name == MARKER:
+        if child.name == marker_name:
             continue
         if child.is_dir():
             shutil.rmtree(child)
         else:
             child.unlink()
-    (path / MARKER).unlink()
+    (path / marker_name).unlink()
     path.rmdir()
     return {"session": str(path), "removed": not path.exists()}
 

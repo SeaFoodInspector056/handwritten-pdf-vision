@@ -4,7 +4,7 @@
 
 Author: [海鮮稽查長 SeaFoodInspector](https://github.com/SeaFoodInspector056)
 
-Version: 1.1.0
+Version: 1.2.0
 
 An **AI agent skill** using the open [Agent Skills format](https://agentskills.io/home). It retrieves a PDF from Google Drive or a local file, renders selected pages to PNG, and asks a vision-capable agent to actually inspect those images before explaining handwritten notes, formulas, and diagrams. It uses PyMuPDF page rendering rather than replacing the page image with OCR or extracted PDF text.
 
@@ -12,7 +12,7 @@ An **AI agent skill** using the open [Agent Skills format](https://agentskills.i
 
 Use this workflow with note-taking applications that export PDF. It analyzes the exported page images, including handwriting, equations, and layout. Goodnotes is the source tested so far; PDFs exported by other applications can follow the same workflow, but those applications have not been individually tested. Native notebook formats are outside the current scope.
 
-The repository is named `handwritten-pdf-vision`. The skill identifier and invocation remain `goodnotes-pdf-vision` and `$goodnotes-pdf-vision` to preserve compatibility with existing installations.
+The repository, skill identifier, and invocation are now unified as `handwritten-pdf-vision` and `$handwritten-pdf-vision`. When upgrading, replace the old `goodnotes-pdf-vision` installation, preserve private source settings, and avoid loading both versions.
 
 ## Better input for handwritten-note recognition
 
@@ -43,7 +43,7 @@ This project is an **AI Agent Skill**. It has been tested in a local Codex envir
 
 ## Installation: Codex example
 
-Install this directory as a discoverable skill named `goodnotes-pdf-vision`. With Codex's skill-installer, provide this repository's GitHub URL. Avoid installing duplicate copies under multiple skill locations.
+Install this directory as a discoverable skill named `handwritten-pdf-vision`. With Codex's skill-installer, provide this repository's GitHub URL. Avoid installing duplicate copies under multiple skill locations.
 
 From the skill directory, create the runtime once in Windows PowerShell:
 
@@ -56,7 +56,7 @@ Requirements: Python 3.10+, an image-viewing tool, and appropriate local permiss
 
 ## Usage
 
-Mention `$goodnotes-pdf-vision` in a Codex conversation, then specify the PDF, physical page number, and question. For example: find my algorithm notes in the Drive folder I provide and explain physical PDF page 7. Use the invocation mechanism supported by your host if it differs from Codex.
+Mention `$handwritten-pdf-vision` in a Codex conversation, then specify the PDF, physical page number, and question. For example: find my algorithm notes in the Drive folder I provide and explain physical PDF page 7. Use the invocation mechanism supported by your host if it differs from Codex.
 
 Implicit invocation is enabled for Codex: an agent can load the skill when it is discoverable and the request matches its description. Automatic selection is not guaranteed; explicitly mentioning the skill makes the intent clear. An agent that loads and executes the skill knows it is using it, and the instructions require it to announce this before starting.
 

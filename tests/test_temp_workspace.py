@@ -33,6 +33,15 @@ class ScratchTests(unittest.TestCase):
         self.assertTrue(original.exists())
         self.assertTrue(Path(two['session']).exists())
 
+    def test_legacy_owned_session_is_cleaned(self):
+        session = self.root / 'goodnotes-pdf-vision-tmp' / ('session-' + 'a' * 32)
+        session.mkdir(parents=True)
+        (session / '.goodnotes-pdf-vision-session.json').write_text(json.dumps({
+            'skill': 'goodnotes-pdf-vision', 'session': str(session)
+        }))
+        (session / 'page.png').write_bytes(b'image')
+        self.assertTrue(scratch.cleanup(session)['removed'])
+
     def test_repeated_cleanup_is_safe(self):
         created = scratch.create(self.root)
         scratch.cleanup(created['session'])

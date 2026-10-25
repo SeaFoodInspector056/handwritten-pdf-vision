@@ -1,17 +1,17 @@
 ---
-name: goodnotes-pdf-vision
-description: Read and explain Goodnotes PDF notes from Google Drive or a local file by rendering requested pages to PNG and actually viewing them, then cleaning per-request scratch files. Use for handwritten notes, formulas, diagrams, and page-specific visual analysis; not for editing Goodnotes notebooks.
+name: handwritten-pdf-vision
+description: Read and explain handwritten PDF notes exported from note-taking applications from Google Drive or a local file by rendering requested pages to PNG and actually viewing them, then cleaning per-request scratch files. Use for handwritten notes, formulas, diagrams, and page-specific visual analysis; not for editing native notebook formats. Goodnotes is the source tested so far.
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
   author: "海鮮稽查長 SeaFoodInspector"
   github: "https://github.com/SeaFoodInspector056"
 ---
 
-# Goodnotes PDF vision
+# Handwritten PDF vision
 
 Author: 海鮮稽查長 SeaFoodInspector · https://github.com/SeaFoodInspector056
 
-Use this skill proactively when a request matches its description; explicit invocation is optional. Briefly tell the user you are using the Goodnotes PDF vision skill before rendering. If asked whether you used it, distinguish reading this SKILL.md, running its bundled scripts, and actually viewing images. Never claim activation or successful cleanup without doing it.
+Use this skill proactively when a request matches its description; explicit invocation is optional. Briefly tell the user you are using the Handwritten PDF vision skill before rendering. If asked whether you used it, distinguish reading this SKILL.md, running its bundled scripts, and actually viewing images. Never claim activation or successful cleanup without doing it.
 
 Use the renderer bundled in `scripts/pdf_to_png.py`; do not download a renderer from Drive or G:. Render locally with PyMuPDF. Do not substitute OCR, extracted PDF text, or connector summaries for looking at the page image.
 
@@ -43,7 +43,7 @@ If the user explicitly requests saved PNGs, copy those requested exports to the 
 
 ## Obtain the current PDF
 
-- Read [references/sources.md](references/sources.md) for source-discovery context. Search/list the user's supplied folder when a file is unknown; resolve ambiguous names. Verify MIME type, size and modification time. Choose the PDF, not the `.goodnotes` archive.
+- Read [references/sources.md](references/sources.md) for source-discovery context. Search/list the user's supplied folder when a file is unknown; resolve ambiguous names. Verify MIME type, size and modification time. Choose the exported PDF, not a native notebook archive such as `.goodnotes`.
 - For Drive, discover the available connector tools. Fetch the original with `download_raw_file=true`, `include_base64=false`, using previously verified file metadata. Prefer a materialized local path; otherwise use the authenticated top-level `file_uri.download_url`. Do not reconstruct or publish signed URLs.
 - Run `scripts/download_pdf.py --output <session-pdf-path> --expected-bytes <metadata-size>` and pass the returned HTTPS URL as its single stdin line. Omit expected size if genuinely unavailable. It streams chunks, checks the PDF header/size, and refuses to overwrite an existing file. Connector-materialized originals belong to the connector; do not delete them as if they were this skill's copies.
 - Local user-supplied PDFs may be read directly and must remain untouched. For Drive requests, obtain the current revision instead of silently using an old local copy. G: is optional; verify access and synchronization if the user chooses it.

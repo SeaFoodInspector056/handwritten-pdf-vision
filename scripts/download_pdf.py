@@ -27,7 +27,7 @@ def main():
         target.parent.mkdir(parents=True, exist_ok=True)
         digest = hashlib.sha256()
         total = 0
-        with urlopen(Request(url, headers={'User-Agent': 'goodnotes-pdf-vision/1'}), timeout=60) as response:
+        with urlopen(Request(url, headers={'User-Agent': 'handwritten-pdf-vision/1'}), timeout=60) as response:
             if urlsplit(response.geturl()).scheme != 'https':
                 raise ValueError('Download redirected to a non-HTTPS URL.')
             prefix = response.read(1024)

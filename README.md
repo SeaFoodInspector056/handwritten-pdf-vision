@@ -4,7 +4,7 @@
 
 作者：[海鮮稽查長 SeaFoodInspector](https://github.com/SeaFoodInspector056)
 
-版本：1.1.0
+版本：1.2.0
 
 一個採用 [Agent Skills 開放格式](https://agentskills.io/home)的 **AI agent 技能**，適用於具備技能載入、程式執行與圖片檢視能力的 agent：從 Google Drive 或本機取得 PDF，將指定頁面渲染為 PNG，實際看圖後解釋手寫筆記、公式與圖形。使用 PyMuPDF，不以 OCR 或 PDF 抽取文字取代頁面圖片。
 
@@ -12,7 +12,7 @@
 
 適用於能匯出 PDF 的筆記軟體：本技能處理匯出的 PDF 頁面，讓 agent 看圖分析手寫字、公式與版面。Goodnotes 是目前已實測的來源；其他軟體匯出的 PDF 可使用相同流程，但尚未逐一實測。筆記軟體的專用檔案格式不在目前支援範圍內。
 
-Repo 名稱為 `handwritten-pdf-vision`；目前技能識別名稱及呼叫方式仍是 `goodnotes-pdf-vision`／`$goodnotes-pdf-vision`，以維持既有安裝的相容性。
+Repo、技能識別名稱及呼叫方式現在統一為 `handwritten-pdf-vision`／`$handwritten-pdf-vision`。從舊版升級時，將 `goodnotes-pdf-vision` 替換為新技能，保留私人來源設定，並避免同時載入新舊兩份技能。
 
 ## 改善手寫筆記的辨識
 
@@ -43,7 +43,7 @@ Python 負責下載、頁碼選擇、輸出管理與清理；實際渲染則由 
 
 ## 安裝（Codex 範例）
 
-將本資料夾安裝為 Codex 可探索到的 `goodnotes-pdf-vision` 技能資料夾。若使用 Codex 的 skill-installer，可提供本專案的 GitHub URL；不要同時在多個技能目錄安裝同名副本。
+將本資料夾安裝為 Codex 可探索到的 `handwritten-pdf-vision` 技能資料夾。若使用 Codex 的 skill-installer，可提供本專案的 GitHub URL；不要同時在多個技能目錄安裝同名副本。
 
 在技能目錄中執行以下 Windows PowerShell 指令，建立一次執行環境：
 
@@ -56,7 +56,7 @@ py -m venv .venv
 
 ## 使用
 
-在對話中輸入 `$goodnotes-pdf-vision`，再指定 PDF、頁碼與要問的問題；例如：請從我提供的 Drive 資料夾找到演算法筆記，解釋實際 PDF 第 7 頁。
+在對話中輸入 `$handwritten-pdf-vision`，再指定 PDF、頁碼與要問的問題；例如：請從我提供的 Drive 資料夾找到演算法筆記，解釋實際 PDF 第 7 頁。
 
 已開啟隱式選用：當技能可被探索、agent 確實判定任務符合描述時，可以自行載入，不必每次明確呼叫。這不是每次必定啟動的保證；明確提及技能可提高確定性。agent 讀取並執行技能時知道自己使用了它，且操作說明要求在開始時告知使用者。
 
