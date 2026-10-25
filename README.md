@@ -1,4 +1,4 @@
-# Goodnotes PDF Vision — AI Agent Skill
+# Handwritten PDF Vision — AI Agent Skill
 
 **繁體中文** | [English](README.en.md)
 
@@ -7,6 +7,12 @@
 版本：1.1.0
 
 一個採用 [Agent Skills 開放格式](https://agentskills.io/home)的 **AI agent 技能**，適用於具備技能載入、程式執行與圖片檢視能力的 agent：從 Google Drive 或本機取得 PDF，將指定頁面渲染為 PNG，實際看圖後解釋手寫筆記、公式與圖形。使用 PyMuPDF，不以 OCR 或 PDF 抽取文字取代頁面圖片。
+
+## 手寫筆記 PDF 看圖分析
+
+適用於能匯出 PDF 的筆記軟體：本技能處理匯出的 PDF 頁面，讓 agent 看圖分析手寫字、公式與版面。Goodnotes 是目前已實測的來源；其他軟體匯出的 PDF 可使用相同流程，但尚未逐一實測。筆記軟體的專用檔案格式不在目前支援範圍內。
+
+Repo 名稱為 `handwritten-pdf-vision`；目前技能識別名稱及呼叫方式仍是 `goodnotes-pdf-vision`／`$goodnotes-pdf-vision`，以維持既有安裝的相容性。
 
 ## 改善手寫筆記的辨識
 

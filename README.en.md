@@ -1,4 +1,4 @@
-# Goodnotes PDF Vision — AI Agent Skill
+# Handwritten PDF Vision — AI Agent Skill
 
 [繁體中文](README.md) | **English**
 
@@ -7,6 +7,12 @@ Author: [海鮮稽查長 SeaFoodInspector](https://github.com/SeaFoodInspector05
 Version: 1.1.0
 
 An **AI agent skill** using the open [Agent Skills format](https://agentskills.io/home). It retrieves a PDF from Google Drive or a local file, renders selected pages to PNG, and asks a vision-capable agent to actually inspect those images before explaining handwritten notes, formulas, and diagrams. It uses PyMuPDF page rendering rather than replacing the page image with OCR or extracted PDF text.
+
+## Visual analysis of handwritten PDF notes
+
+Use this workflow with note-taking applications that export PDF. It analyzes the exported page images, including handwriting, equations, and layout. Goodnotes is the source tested so far; PDFs exported by other applications can follow the same workflow, but those applications have not been individually tested. Native notebook formats are outside the current scope.
+
+The repository is named `handwritten-pdf-vision`. The skill identifier and invocation remain `goodnotes-pdf-vision` and `$goodnotes-pdf-vision` to preserve compatibility with existing installations.
 
 ## Better input for handwritten-note recognition
 
