@@ -1,12 +1,41 @@
-# Goodnotes PDF Vision
+# Goodnotes PDF Vision — AI Agent Skill
+
+**繁體中文** | [English](README.en.md)
 
 作者：[海鮮稽查長 SeaFoodInspector](https://github.com/SeaFoodInspector056)
 
 版本：1.1.0
 
-給具備程式執行與圖片檢視能力的 Codex／相容 agent 使用：從 Google Drive 或本機取得 PDF，將指定頁面渲染為 PNG，實際看圖後解釋手寫筆記、公式與圖形。使用 PyMuPDF，不以 OCR 或 PDF 抽取文字取代頁面圖片。
+一個採用 [Agent Skills 開放格式](https://agentskills.io/home)的 **AI agent 技能**，適用於具備技能載入、程式執行與圖片檢視能力的 agent：從 Google Drive 或本機取得 PDF，將指定頁面渲染為 PNG，實際看圖後解釋手寫筆記、公式與圖形。使用 PyMuPDF，不以 OCR 或 PDF 抽取文字取代頁面圖片。
 
-## 安裝
+## 改善手寫筆記的辨識
+
+**這個技能以提升 agent 辨識與理解手寫筆記的準確度為目標。** 相較於只提供 PDF 抽取文字，頁面圖片保留筆跡、上下標、公式排列、箭頭、顏色與上下文位置，讓視覺模型有更完整的依據判讀內容，也適合處理缺少可用文字層的手寫 PDF。
+
+實際效果取決於原稿清晰度、渲染解析度與模型能力。本專案尚未進行量化的手寫辨識準確度比較；轉成圖片不保證能正確辨認所有字跡，也無法恢復原本已模糊的細節。
+
+## 為什麼選擇 Python？
+
+Python 負責下載、頁碼選擇、輸出管理與清理；實際渲染則由 PyMuPDF 呼叫原生 MuPDF 引擎完成。因此，這個流程不會把逐像素繪圖工作放在 Python 迴圈中，也不必為了使用原生渲染效能另外維護 C++ 建置環境。[PyMuPDF 官方說明](https://pymupdf.readthedocs.io/en/latest/tutorial.html)
+
+效能主要受到解析度、頁面大小、PDF 內容複雜度、PNG 編碼與磁碟 I/O 影響。DPI 加倍會讓像素數約增加為四倍。對這種指定頁面的工具，Python 的開發、維護與跨平台便利性很合適；換成 C++ 是否更快，仍要用相同引擎、檔案、解析度與硬體實測。
+
+## 適用的 AI agent
+
+本專案是 **AI Agent Skill**；目前已在 Windows 11 的 Codex 執行環境完成實測。`SKILL.md` 與 Python 程式可供其他支援 Agent Skills 的產品沿用，但該產品必須提供以下能力：
+
+- 載入 `SKILL.md`，執行 Python 並讀寫本機檔案。
+- 實際開啟頁面圖片，將圖片提供給具備視覺能力的模型。
+- 若使用 Google Drive，能授權取得原始 PDF，並允許下載檔案。
+
+| 執行環境 | 驗證狀態 |
+| --- | --- |
+| Codex／ChatGPT 桌面應用程式中的本機 Codex，Windows 11 | 已驗證下載、渲染、圖片讀取與暫存清理 |
+| 其他支援 Agent Skills 的 agent | 格式與程式可沿用；工具名稱、安裝位置與權限可能需要調整，尚未實測 |
+
+`agents/openai.yaml` 提供 Codex 介面與選用設定；其他產品可依自己的技能探索機制使用核心 `SKILL.md` 與程式。技能是否能自動選用，也由各產品決定。[Agent Skills 格式說明](https://agentskills.io/home)
+
+## 安裝（Codex 範例）
 
 將本資料夾安裝為 Codex 可探索到的 `goodnotes-pdf-vision` 技能資料夾。若使用 Codex 的 skill-installer，可提供本專案的 GitHub URL；不要同時在多個技能目錄安裝同名副本。
 
