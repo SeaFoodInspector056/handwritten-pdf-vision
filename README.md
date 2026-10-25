@@ -90,7 +90,7 @@ Codex 設定參考：[官方 MCP 文件](https://learn.chatgpt.com/docs/extend/m
 .\.venv\Scripts\python.exe -B -m unittest discover -s tests -v
 ```
 
-測試包含真正的 stdio MCP 握手、工具探索、圖片回傳與錯誤回傳，以及頁碼、裁切、加密 PDF、下載限制、不產生圖片檔和原檔保護。另以 Goodnotes 計網概筆記第 10 頁完成 Drive → 記憶體 → MCP 圖片回傳 → 圖片顯示與實際查看；本次透過 MCP 測試客戶端轉交圖片，與應用程式重新載入後的原生工具呼叫分開驗證。其他客戶端未逐一實測。
+測試包含真正的 stdio MCP 握手、工具探索、圖片回傳與錯誤回傳，以及頁碼、裁切、加密 PDF、下載限制、不產生圖片檔和原檔保護。另以筆記第 10 頁完成 Drive → 記憶體 → MCP 圖片回傳 → 圖片顯示與實際查看；本次透過 MCP 測試客戶端轉交圖片，與應用程式重新載入後的原生工具呼叫分開驗證。其他客戶端未逐一實測。
 
 
 ## 授權
