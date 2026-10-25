@@ -1,5 +1,11 @@
 # Handwritten PDF Vision — AI Agent Skill
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
+[![Version: 1.2.1](https://img.shields.io/badge/Version-1.2.1-2563EB?style=flat-square)](SKILL.md)
+[![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/downloads/)
+[![PyMuPDF: 1.28.2](https://img.shields.io/badge/PyMuPDF-1.28.2-16A34A?style=flat-square)](requirements.txt)
+[![Tested: Windows 11](https://img.shields.io/badge/Tested-Windows%2011-0078D4?style=flat-square)](README.en.md#supported-agents-and-compatibility)
+
 [繁體中文](README.md) | **English**
 
 Author: [海鮮稽查長 SeaFoodInspector](https://github.com/SeaFoodInspector056)
