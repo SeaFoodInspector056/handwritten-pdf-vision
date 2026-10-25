@@ -10,6 +10,8 @@
 
 作者：[海鮮稽查長 SeaFoodInspector](https://github.com/SeaFoodInspector056)
 
+![手寫 PDF 的兩種讀取路徑：抽取文字，以及透過 MCP 渲染頁面圖片交給 AI 視覺分析](assets/project-overview-v2.png)
+
 ## 省流：這個 skill 解決什麼？
 
 **特別適用客群** ：

@@ -5,4 +5,5 @@ work/
 outputs/
 *.pdf
 *.png
+!/assets/project-overview-v2.png
 .env

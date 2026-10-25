@@ -10,6 +10,8 @@
 
 Author: [海鮮稽查長 SeaFoodInspector](https://github.com/SeaFoodInspector056)
 
+![Two ways to read a handwritten PDF: text extraction, or page rendering through MCP for AI visual analysis](assets/project-overview-v2.png)
+
 ## TL;DR: what problem does this skill solve?
 
 **Who this is especially useful for**:
