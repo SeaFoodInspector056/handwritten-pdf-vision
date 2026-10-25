@@ -1,8 +1,9 @@
 ---
 name: handwritten-pdf-vision
 description: Read and explain handwritten PDF notes exported from note-taking applications from Google Drive or a local file by rendering requested pages to PNG and actually viewing them, then cleaning per-request scratch files. Use for handwritten notes, formulas, diagrams, and page-specific visual analysis; not for editing native notebook formats. Goodnotes is the source tested so far.
+license: MIT
 metadata:
-  version: "1.2.0"
+  version: "1.2.1"
   author: "海鮮稽查長 SeaFoodInspector"
   github: "https://github.com/SeaFoodInspector056"
 ---
@@ -14,6 +15,8 @@ Author: 海鮮稽查長 SeaFoodInspector · https://github.com/SeaFoodInspector0
 Use this skill proactively when a request matches its description; explicit invocation is optional. Briefly tell the user you are using the Handwritten PDF vision skill before rendering. If asked whether you used it, distinguish reading this SKILL.md, running its bundled scripts, and actually viewing images. Never claim activation or successful cleanup without doing it.
 
 Use the renderer bundled in `scripts/pdf_to_png.py`; do not download a renderer from Drive or G:. Render locally with PyMuPDF. Do not substitute OCR, extracted PDF text, or connector summaries for looking at the page image.
+
+Original project files use [MIT](LICENSE); dependencies retain their own licenses. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for PyMuPDF/MuPDF.
 
 ## Runtime
 

@@ -4,7 +4,7 @@
 
 作者：[海鮮稽查長 SeaFoodInspector](https://github.com/SeaFoodInspector056)
 
-版本：1.2.0
+版本：1.2.1
 
 一個採用 [Agent Skills 開放格式](https://agentskills.io/home)的 **AI agent 技能**，適用於具備技能載入、程式執行與圖片檢視能力的 agent：從 Google Drive 或本機取得 PDF，將指定頁面渲染為 PNG，實際看圖後解釋手寫筆記、公式與圖形。使用 PyMuPDF，不以 OCR 或 PDF 抽取文字取代頁面圖片。
 
@@ -40,7 +40,34 @@ Python 負責下載、頁碼選擇、輸出管理與清理；實際渲染則由 
 
 `agents/openai.yaml` 提供 Codex 介面與選用設定；其他產品可依自己的技能探索機制使用核心 `SKILL.md` 與程式。技能是否能自動選用，也由各產品決定。[Agent Skills 格式說明](https://agentskills.io/home)
 
-## 安裝（Codex 範例）
+## 快速安裝
+
+### 方法一：支援的 AI agent 通用安裝指令
+
+電腦需先有 Node.js 與 `npx`；在終端機執行：
+
+```bash
+npx skills add SeaFoodInspector056/handwritten-pdf-vision --skill handwritten-pdf-vision
+```
+
+依安裝工具提示選擇要使用的 agent 與安裝範圍。這會安裝技能指令及程式，不會替你登入 Google Drive，也不包含 Python 套件。首次使用時，agent 可依 `SKILL.md` 建立 Python 執行環境。
+
+只查看 Repo 是否能找到技能、不安裝：
+
+```bash
+npx skills add SeaFoodInspector056/handwritten-pdf-vision --list
+```
+
+此 Repo 已通過 Skills CLI 的 `--list` 探索檢查，會列出 `handwritten-pdf-vision`。這不等於已在所有 agent 實測，也不代表已取得 skills.sh 目錄收錄或審核。[Skills CLI 官方說明](https://skills.sh/docs/cli)
+
+### 方法二：直接請 Codex 安裝
+
+將以下要求交給有 skill-installer 的 Codex：
+
+> 請用 skill-installer 安裝 https://github.com/SeaFoodInspector056/handwritten-pdf-vision 。技能位於 Repo 根目錄，安裝名稱為 handwritten-pdf-vision；請保留已有的私人來源設定，並準備 Python 執行環境。
+
+### 方法三：手動安裝與 Python 環境
+
 
 將本資料夾安裝為 Codex 可探索到的 `handwritten-pdf-vision` 技能資料夾。若使用 Codex 的 skill-installer，可提供本專案的 GitHub URL；不要同時在多個技能目錄安裝同名副本。
 
@@ -83,3 +110,9 @@ python scripts/temp_workspace.py cleanup --session <create回傳的完整session
 清理測試涵蓋原檔與其他 session 保護、重複清理、非法目錄、標記不符、清理失敗重試及連結拒絕；無法建立連結的系統會跳過連結案例。已在 Windows 驗證真實 PDF 第 7 頁的渲染、圖片讀取與暫存檔刪除。
 
 本公開版本不包含私人 Drive 資料夾 ID、筆記、帳號憑證或臨時下載網址。
+
+## 授權
+
+本專案原創的技能指令、程式與文件採用 [MIT License](LICENSE)，作者為海鮮稽查長 SeaFoodInspector。允許使用、修改、散布及商用，並須保留著作權與授權聲明。
+
+PyMuPDF/MuPDF 採用另外的 AGPL／商業授權；本專案的 MIT 不會取代依賴套件的條款。整合散布或部署時須另外評估適用義務，詳見 [第三方依賴授權](THIRD_PARTY_NOTICES.md)。

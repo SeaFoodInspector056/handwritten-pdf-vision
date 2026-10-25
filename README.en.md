@@ -4,7 +4,7 @@
 
 Author: [海鮮稽查長 SeaFoodInspector](https://github.com/SeaFoodInspector056)
 
-Version: 1.2.0
+Version: 1.2.1
 
 An **AI agent skill** using the open [Agent Skills format](https://agentskills.io/home). It retrieves a PDF from Google Drive or a local file, renders selected pages to PNG, and asks a vision-capable agent to actually inspect those images before explaining handwritten notes, formulas, and diagrams. It uses PyMuPDF page rendering rather than replacing the page image with OCR or extracted PDF text.
 
@@ -40,7 +40,34 @@ This project is an **AI Agent Skill**. It has been tested in a local Codex envir
 
 `agents/openai.yaml` supplies Codex-specific interface and invocation settings. Other products can use their own discovery mechanism with the core `SKILL.md` and scripts. Automatic skill selection depends on the host product. See the [Agent Skills overview](https://agentskills.io/home).
 
-## Installation: Codex example
+## Quick installation
+
+### Option 1: install for a supported AI agent
+
+With Node.js and `npx` available, run:
+
+```bash
+npx skills add SeaFoodInspector056/handwritten-pdf-vision --skill handwritten-pdf-vision
+```
+
+Follow the CLI prompts to choose the target agent and installation scope. This installs the skill instructions and scripts; it does not sign you into Google Drive or bundle Python packages. On first use, the agent can prepare the Python runtime by following `SKILL.md`.
+
+To list discoverable skills without installing:
+
+```bash
+npx skills add SeaFoodInspector056/handwritten-pdf-vision --list
+```
+
+This repository passed the Skills CLI `--list` discovery check and exposes `handwritten-pdf-vision`. That does not establish compatibility with every agent or confirm a skills.sh directory listing or audit. See the [Skills CLI documentation](https://skills.sh/docs/cli).
+
+### Option 2: ask Codex to install it
+
+Give a Codex agent with skill-installer this request:
+
+> Use skill-installer to install https://github.com/SeaFoodInspector056/handwritten-pdf-vision . The skill is at the repository root; install it as handwritten-pdf-vision, preserve any existing private source settings, and prepare the Python runtime.
+
+### Option 3: manual installation and Python setup
+
 
 Install this directory as a discoverable skill named `handwritten-pdf-vision`. With Codex's skill-installer, provide this repository's GitHub URL. Avoid installing duplicate copies under multiple skill locations.
 
@@ -83,3 +110,9 @@ Normal completion removes scratch files; failures and recoverable cancellation m
 Cleanup tests cover preservation of originals and other sessions, repeated cleanup, invalid target directories, mismatched markers, retry after failure, and link rejection. The link case is skipped if the OS does not permit creating a test link. Rendering, image inspection, and scratch deletion have also been verified with a real PDF page on Windows.
 
 The public repository contains no private Drive folder IDs, notebooks, account credentials, or temporary download URLs.
+
+## License
+
+The original skill instructions, scripts, and documentation are licensed under the [MIT License](LICENSE), with attribution to 海鮮稽查長 SeaFoodInspector. Use, modification, distribution, and commercial use are permitted subject to preserving the copyright and license notice.
+
+PyMuPDF/MuPDF retain their separate AGPL/commercial licensing. This project's MIT license does not replace dependency terms. Combined distribution or deployment requires a separate evaluation of applicable obligations; see [third-party dependency notices](THIRD_PARTY_NOTICES.md).
