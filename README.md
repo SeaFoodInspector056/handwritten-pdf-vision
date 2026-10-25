@@ -11,7 +11,7 @@
 
 版本：1.2.1
 
-一個採用 [Agent Skills 開放格式](https://agentskills.io/home)的 **AI agent 技能**，適用於具備技能載入、程式執行與圖片檢視能力的 agent：從 Google Drive 、 NAS 、本機等地取得 PDF 後，將指定頁面渲染為 PNG，讓 agent 使用視覺模型查看圖檔後，分析解釋手寫筆記、公式與圖形，而非直接使用 PDF 抽取文字字串來讀取手寫字跡，以達到手寫筆記的分析準確度。
+一個採用 [Agent Skills 開放格式](https://agentskills.io/home)的 **AI agent 技能**，適用於具備技能載入、程式執行與圖片檢視能力的 agent：從 Google Drive 、 NAS 、本機等地取得 PDF 後，將指定頁面渲染為 PNG，讓 agent 使用視覺模型查看圖檔後，分析解釋手寫筆記、公式與圖形，而非直接使用 PDF 抽取文字字串來讀取手寫字跡，以提高手寫筆記的分析準確度。
 
 ## 省流：這個 skill 解決什麼？
 
