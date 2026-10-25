@@ -12,7 +12,6 @@ An **AI agent skill** using the open [Agent Skills format](https://agentskills.i
 
 Use this workflow with note-taking applications that export PDF. It analyzes the exported page images, including handwriting, equations, and layout. Goodnotes is the source tested so far; PDFs exported by other applications can follow the same workflow, but those applications have not been individually tested. Native notebook formats are outside the current scope.
 
-The repository, skill identifier, and invocation are now unified as `handwritten-pdf-vision` and `$handwritten-pdf-vision`. When upgrading, replace the old `goodnotes-pdf-vision` installation, preserve private source settings, and avoid loading both versions.
 
 ## Better input for handwritten-note recognition
 
