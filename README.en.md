@@ -14,13 +14,13 @@ Author: [海鮮稽查長 SeaFoodInspector](https://github.com/SeaFoodInspector05
 
 **Who this is especially useful for**:
 
-People who find it inconvenient to take and upload screenshots of handwritten notes every time they want AI analysis, and want an agent to read their handwritten digital notes in PDF format **without taking screenshots**.
+People who find it inconvenient to take and upload screenshots of handwritten notes every time they want AI analysis, dislike the space those screenshots take up in their photo library, and want an agent to read their handwritten digital notes in PDF format **without taking screenshots**.
 
 ---
 
-**Just like handing the agent a screenshot, let it actually see handwritten PDF pages instead of receiving only extracted text**:
+**Help prevent agents from misinterpreting handwritten PDF content when reading files directly**:
 
-Some Drive/PDF tools return only text by default, potentially losing handwriting, equation layout, arrows, colors, and images. This project combines [Agent Skills](https://agentskills.io/home) instructions with a local MCP renderer that supplies the complete requested page to the current agent's vision model. The model can then analyze handwritten notes, formulas, and diagrams to **improve analysis accuracy**.
+Because most Drive/PDF tools return only text strings by default, handwriting, equation layout, arrows, colors, and images are lost in the process. This project therefore combines [Agent Skills](https://agentskills.io/home) instructions with a local MCP renderer to supply the complete requested page to the current agent's vision model for analysis of handwritten notes, formulas, and diagrams. Just like handing the agent a screenshot, this lets it actually see the handwritten PDF page and can help **substantially improve analysis accuracy**.
 
 ---
 
